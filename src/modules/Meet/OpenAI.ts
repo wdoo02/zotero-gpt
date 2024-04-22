@@ -88,8 +88,18 @@ class OpenAIEmbeddings {
   private async request(input: string[]) {
     const views = Zotero.ZoteroGPT.views as Views
     let api = Zotero.Prefs.get(`${config.addonRef}.api`) as string
+const embedding_api = Zotero.Prefs.get(`${config.addonRef}.embedding_api`) as string
+    if (embedding_api !== "") {
+      api = embedding_api
+    }
     api = api.replace(/\/(?:v1)?\/?$/, "")
-    const secretKey = Zotero.Prefs.get(`${config.addonRef}.secretKey`)
+    let secretKey = Zotero.Prefs.get(`${config.addonRef}.secretKey`)
+    let embedding_secretKey = Zotero.Prefs.get(`${config.addonRef}.embedding_secretKey`) as string
+    const embedding_model = Zotero.Prefs.get(`${config.addonRef}.embedding_model`) as string;
+    if (embedding_secretKey !== "" && embedding_api !== "") {
+      secretKey = embedding_secretKey 
+    }
+    const split_len = Zotero.Prefs.get(`${config.addonRef}.embeddingBatchNum`)
     let res
     const url = `${api}/v1/embeddings`
     if (!secretKey) {
@@ -110,7 +120,7 @@ class OpenAIEmbeddings {
             "Authorization": `Bearer ${secretKey}`,
           },
           body: JSON.stringify({
-            model: "text-embedding-ada-002",
+            model: embedding_model,
             input: input
           }),
         }

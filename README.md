@@ -63,6 +63,7 @@ Here is an example on how to build this project. For more information on how to 
 git clone https://github.com/MuiseDestiny/zotero-gpt.git
 cd zotero-gpt
 npm install
+npm i zotero-plugin-toolkit@2.1.3
 npm run build
 ```
 The generated `.xpi` file in the build directory is the extension that you can install in Zotero.
